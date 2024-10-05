@@ -14,8 +14,22 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
     if not TeleportCheck and queueteleport then
         TeleportCheck = true
         queueteleport([[
-            game.Loaded:Wait() -- 等待游戏完全加载
-            wait(5) -- 额外的延时，确保所有资源加载完成
+            local RunService = game:GetService("RunService")
+            local loaded = false
+            local connection
+
+            -- 确保游戏加载完成后再执行
+            connection = RunService.Heartbeat:Connect(function()
+                if game:IsLoaded() then
+                    loaded = true
+                    connection:Disconnect() -- 断开连接，避免重复检查
+                end
+            end)
+
+            -- 等待游戏加载完成，或者至少等待 5 秒作为保险
+            repeat wait(1) until loaded or time() > 5
+
+            -- 执行脚本
             loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
         ]])
     end
