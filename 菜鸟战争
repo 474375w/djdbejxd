@@ -20,7 +20,7 @@ end
 local function executeActions()
     local args
 
-    
+    -- 部署单位
     args = {
         [1] = {
             {["y"] = 944, ["x"] = -1264, ["units"] = {"_69a7", "_cc66", "_cc66"}},
@@ -31,12 +31,12 @@ local function executeActions()
     ReplicatedStorage.Connection.inGame.Deployment:FireServer(unpack(args))
     task.wait()
 
-    
+    -- 投票和回合操作
     ReplicatedStorage.Connection.inGame.Voting:FireServer()
     waitForStartTurn()
     waitForEndTurn()
 
-    
+    -- 移动操作
     local moveActions = {
         {
             actionId = "20",
@@ -74,7 +74,7 @@ local function executeActions()
         waitForEndTurn()
     end
 
-    
+    -- 攻击操作
     local attackActions = {
         {"20", 1, "9"},
         {"14", 1, "9"}
@@ -85,12 +85,12 @@ local function executeActions()
         waitForEndTurn()
     end
 
-    
+    -- 再次投票和回合操作
     ReplicatedStorage.Connection.inGame.Voting:FireServer()
     waitForStartTurn()
     waitForEndTurn()
 
-    
+    -- 额外移动操作
     local additionalMoves = {
         {
             actionId = "14",
@@ -109,13 +109,12 @@ local function executeActions()
         ReplicatedStorage.Connection.inGame.actions.Move:FireServer(unpack(args))
         waitForEndTurn()
 
-        
         ReplicatedStorage.Connection.inGame.Voting:FireServer()
         waitForStartTurn()
         waitForEndTurn()
     end
 
-    
+    -- 第二次移动操作
     local secondMoves = {
         {
             actionId = "14",
@@ -133,7 +132,7 @@ local function executeActions()
         waitForEndTurn()
     end
 
-    
+    -- 运输和捕获操作
     args = {"14", "16", -1248, 872}
     ReplicatedStorage.Connection.inGame.actions.Transport:FireServer(unpack(args))
     waitForEndTurn()
@@ -143,5 +142,23 @@ local function executeActions()
     waitForEndTurn()
 end
 
-
+-- 执行所有行动
 executeActions()
+
+-- 检测胜利界面并返回主界面
+local function waitForWinAndReturn()
+    local returnButton = Players["474375w"].PlayerGui.WinGui.MainFrame.Return
+    local originalText = returnButton.Text
+
+    repeat
+        task.wait()
+    until returnButton.Text ~= originalText
+
+    repeat
+        task.wait()
+    until returnButton.Text == originalText
+
+    ReplicatedStorage.Connection.inGame.ReturnBack:FireServer()
+end
+
+waitForWinAndReturn()
