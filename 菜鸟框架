@@ -1,30 +1,22 @@
 local Players = game:GetService("Players")
 local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 local TeleportCheck = false
+local RunService = game:GetService("RunService")
 
--- 等待 workspace.Filter 出现后再判断
+-- 检查 workspace.Filter 出现后再进行判断
 local function waitForFilter()
-    local RunService = game:GetService("RunService")
-    local filterExists = false
-
-    -- 定期检查 workspace.Filter 是否存在
-    RunService.Heartbeat:Connect(function()
-        if game.Workspace:FindFirstChild("Filter") then
-            filterExists = true
-        end
-    end)
-
-    -- 如果 workspace.Filter 不存在，则等待
-    while not filterExists do
-        wait(0.1) -- 每 0.1 秒检查一次
+    while not game:GetService("Workspace"):FindFirstChild("Filter") do
+        RunService.Heartbeat:Wait() -- 每一帧检查一次
     end
+end
 
-    -- 检查 EntityModels 是否存在并执行相应的脚本
-    if game:GetService("Workspace"):FindFirstChild("EntityModels") then
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%88%98%E4%BA%89'))()
-    else
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%88%98%E4%BA%89%E9%80%89%E6%8B%A9'))()
-    end
+-- 等待 Filter 出现后执行逻辑
+waitForFilter()
+
+if game:GetService("Workspace"):FindFirstChild("EntityModels") then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%88%98%E4%BA%89'))()
+else
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%88%98%E4%BA%89%E9%80%89%E6%8B%A9'))()
 end
 
 -- 处理玩家传送事件，确保延时加载
@@ -33,32 +25,30 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
         TeleportCheck = true
         queueteleport([[
             local RunService = game:GetService("RunService")
-            local success = false
-            local maxAttempts = 5  -- 最大尝试次数
-            local attempt = 0
+            local loaded = false
+            local connection
 
-            -- 尝试加载脚本函数
-            local function tryLoadScript()
-                attempt = attempt + 1
-                if game.Workspace:FindFirstChild("Filter") and game:IsLoaded() and game:GetService("Players").LocalPlayer and game:GetService("Workspace") then
-                    success = true
-                    loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
+            -- 确保游戏加载完成后再执行
+            connection = RunService.Heartbeat:Connect(function()
+                if game:IsLoaded() then
+                    loaded = true
+                    connection:Disconnect() -- 断开连接，避免重复检查
+                end
+            end)
+
+            -- 等待游戏加载完成，或者至少等待 5 秒作为保险
+            repeat wait(1) until loaded or time() > 5
+
+            -- 确保 workspace.Filter 出现后再继续执行
+            local function waitForFilter()
+                while not game:GetService("Workspace"):FindFirstChild("Filter") do
+                    RunService.Heartbeat:Wait()
                 end
             end
+            waitForFilter()
 
-            -- 每隔1秒尝试执行，直到加载完成或尝试次数达到最大值
-            while not success and attempt < maxAttempts do
-                tryLoadScript()
-                if not success then wait(1) end  -- 等待1秒后再尝试
-            end
-
-            -- 如果经过所有尝试后还没成功，可以记录或处理错误（可选）
-            if not success then
-                warn("Failed to execute script after "..maxAttempts.." attempts.")
-            end
+            -- 执行脚本
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
         ]])
     end
 end)
-
--- 执行等待 Filter 出现的逻辑
-waitForFilter()
