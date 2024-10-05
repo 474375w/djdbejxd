@@ -15,22 +15,29 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
         TeleportCheck = true
         queueteleport([[
             local RunService = game:GetService("RunService")
-            local loaded = false
-            local connection
+            local success = false
+            local maxAttempts = 5  -- 最大尝试次数
+            local attempt = 0
 
-            -- 确保游戏加载完成后再执行
-            connection = RunService.Heartbeat:Connect(function()
-                if game:IsLoaded() then
-                    loaded = true
-                    connection:Disconnect() -- 断开连接，避免重复检查
+            -- 尝试加载脚本函数
+            local function tryLoadScript()
+                attempt = attempt + 1
+                if game:IsLoaded() and game:GetService("Players").LocalPlayer and game:GetService("Workspace") then
+                    success = true
+                    loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
                 end
-            end)
+            end
 
-            -- 等待游戏加载完成，或者至少等待 5 秒作为保险
-            repeat wait(1) until loaded or time() > 5
+            -- 每隔1秒尝试执行，直到加载完成或尝试次数达到最大值
+            while not success and attempt < maxAttempts do
+                tryLoadScript()
+                if not success then wait(1) end  -- 等待1秒后再尝试
+            end
 
-            -- 执行脚本
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
+            -- 如果经过所有尝试后还没成功，可以记录或处理错误（可选）
+            if not success then
+                warn("Failed to execute script after "..maxAttempts.." attempts.")
+            end
         ]])
     end
 end)
