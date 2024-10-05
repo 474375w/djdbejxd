@@ -17,6 +17,19 @@ local function waitForStartTurn()
     waitForButtonText("End turn 1/1")
 end
 
+-- 检查实体模型 14 是否存在
+local function ensureEntityModelExists(modelName)
+    local entityModel
+    repeat
+        task.wait(1) -- 添加延迟，避免过于频繁的检查
+        entityModel = game:GetService("Workspace").EntityModels:FindFirstChild(modelName)
+        if not entityModel then
+            print("模型 " .. modelName .. " 未找到，重新执行投票...")
+            ReplicatedStorage.Connection.inGame.Voting:FireServer() -- 如果模型不存在，重新执行投票
+        end
+    until entityModel
+end
+
 local function executeActions()
     local args
 
@@ -33,6 +46,10 @@ local function executeActions()
 
     -- 投票和回合操作
     ReplicatedStorage.Connection.inGame.Voting:FireServer()
+
+    -- 确保模型 "14" 出现，如果没有出现则重新执行投票
+    ensureEntityModelExists("14")
+
     waitForStartTurn()
     waitForEndTurn()
 
