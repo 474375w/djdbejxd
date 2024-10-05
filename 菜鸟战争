@@ -2,12 +2,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local task = task
 
-local function waitForElementToLoad(element)
-    repeat
-        task.wait()
-    until element ~= nil and element.Parent ~= nil
-end
-
 local function waitForButtonText(targetText)
     local endTurnButton = Players["474375w"].PlayerGui.GameGui.EndTurn.Button
     repeat
@@ -24,12 +18,6 @@ local function waitForStartTurn()
 end
 
 local function executeActions()
-waitForElementToLoad(Players["474375w"].PlayerGui.GameGui.EndTurn.Button)
-    waitForElementToLoad(ReplicatedStorage.Connection.inGame.Deployment)
-    waitForElementToLoad(ReplicatedStorage.Connection.inGame.Voting)
-    waitForElementToLoad(ReplicatedStorage.Connection.inGame.actions.Move)
-    waitForElementToLoad(ReplicatedStorage.Connection.inGame.actions.Attack)
-    
     local args
 
     -- 部署单位
