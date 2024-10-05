@@ -2,17 +2,8 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local task = task
 
-local function waitForElement(path)
-    local element = path
-    while not element do
-        task.wait()
-        element = path
-    end
-    return element
-end
-
 local function waitForButtonText(targetText)
-    local endTurnButton = waitForElement(Players.LocalPlayer.PlayerGui.GameGui.EndTurn.Button)
+    local endTurnButton = Players["474375w"].PlayerGui.GameGui.EndTurn.Button
     repeat
         task.wait()
     until endTurnButton.Text == targetText
@@ -156,7 +147,7 @@ executeActions()
 
 -- 检测胜利界面并返回主界面
 local function waitForWinAndReturn()
-    local returnButton = waitForElement(Players.LocalPlayer.PlayerGui.WinGui.MainFrame.Return)
+    local returnButton = Players["474375w"].PlayerGui.WinGui.MainFrame.Return
     local originalText = returnButton.Text
 
     repeat
