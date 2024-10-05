@@ -16,7 +16,7 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
         queueteleport([[
             local RunService = game:GetService("RunService")
             local success = false
-            local maxAttempts = 5  -- 最大尝试次数
+            local maxAttempts = 50  -- 最大尝试次数
             local attempt = 0
 
             -- 尝试加载脚本函数
