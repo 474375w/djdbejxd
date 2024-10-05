@@ -37,7 +37,7 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
             end)
 
             -- 等待游戏加载完成，或者至少等待 5 秒作为保险
-            repeat wait(1) until loaded or time() > 5
+            repeat wait(1) until loaded or time() > 10
 
             -- 确保 Workspace.Filter 和 ReplicatedStorage 出现后再继续执行
             local function waitForImportantServices()
