@@ -9,10 +9,14 @@ else
     loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%88%98%E4%BA%89%E9%80%89%E6%8B%A9'))()
 end
 
--- 处理玩家传送事件
+-- 处理玩家传送事件，确保延时加载
 Players.LocalPlayer.OnTeleport:Connect(function(State)
     if not TeleportCheck and queueteleport then
         TeleportCheck = true
-        queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()")
+        queueteleport([[
+            game.Loaded:Wait() -- 等待游戏完全加载
+            wait(5) -- 额外的延时，确保所有资源加载完成
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/474375w/djdbejxd/refs/heads/main/%E8%8F%9C%E9%B8%9F%E6%A1%86%E6%9E%B6'))()
+        ]])
     end
 end)
