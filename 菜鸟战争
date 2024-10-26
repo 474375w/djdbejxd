@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local task = task
 
 local function waitForButtonText(targetText)
-    local endTurnButton = Players["474375w"].PlayerGui.GameGui.EndTurn.Button
+    local endTurnButton = Players.LocalPlayer.PlayerGui.GameGui.EndTurn.Button
     repeat
         task.wait()
     until endTurnButton.Text == targetText
@@ -164,7 +164,7 @@ executeActions()
 
 -- 检测胜利界面并返回主界面
 local function waitForWinAndReturn()
-    local returnButton = Players["474375w"].PlayerGui.WinGui.MainFrame.Return
+    local returnButton = Players.LocalPlayer.PlayerGui.WinGui.MainFrame.Return
     local originalText = returnButton.Text
 
     repeat
